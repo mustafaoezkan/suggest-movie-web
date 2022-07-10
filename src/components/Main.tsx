@@ -1,8 +1,29 @@
-import React from "react";
+import {
+  Box,
+  Button,
+  Form,
+  FormField,
+  Spinner,
+  Tab,
+  Tabs,
+  TextInput,
+} from "grommet";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../store";
-import { getSuggestion } from "../store/actions/suggestionAction";
+import {
+  addSuggestion,
+  getSuggestion,
+} from "../store/actions/suggestionAction";
+import { SuggestionForm } from "../types/suggestion";
+
+const emptyForm: SuggestionForm = {
+  movie_name: "",
+  dislike_count: 0,
+  like_count: 0,
+  suggestion_by: "",
+};
 
 export default function Main() {
   const dispatch = useDispatch();
@@ -10,10 +31,15 @@ export default function Main() {
   const { data, loading, error } = useSelector(
     (state: AppState) => state.suggestion
   );
+  const [form, setForm] = useState<SuggestionForm>(emptyForm);
+
+  const submitForm = () => {
+    setForm({ ...form, like_count: 5, dislike_count: 2 });
+    dispatch<any>(addSuggestion(form));
+  };
 
   useEffect(() => {
     dispatch<any>(getSuggestion());
-    console.log(data);
   }, []);
 
   return (
@@ -21,29 +47,64 @@ export default function Main() {
       style={{
         margin: "auto",
         width: "50%",
-        padding: "20rem",
+        padding: "15rem",
       }}
     >
-      {data.map((item) => {
-        const subYear = item.created_at.substring(0, 4);
-        const subMonth = item.created_at.substring(5, 7);
-        const subDay = item.created_at.substring(8, 10);
-        const subHour = item.created_at.substring(11, 13);
-        const subMinute = item.created_at.substring(14, 16);
-
-        const subDate = `${subDay}-${subMonth}-${subYear} ${subHour}:${subMinute}`;
-
-        return (
-          <>
-            <p>ID: {item.id}</p>
-            <p>Movie Name: {item.movie_name}</p>
-            <p>Like Count: {item.like_count}</p>
-            <p>Dislike Count: {item.dislike_count}</p>
-            <p>Suggestion By: {item.suggestion_by}</p>
-            <p>Created At: {subDate}</p>
-          </>
-        );
-      })}
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          <Tabs>
+            <Tab title="Show">
+              <div>
+                {data.map((item) => {
+                  return (
+                    <div>
+                      <h1>Movie Name: {item.movie_name}</h1>
+                      <h2>Suggestion By: {item.suggestion_by}</h2>
+                      <h3>Like: {item.like_count}</h3>
+                      <h3>Dislike: {item.dislike_count}</h3>
+                    </div>
+                  );
+                })}
+              </div>
+            </Tab>
+            <Tab title="Add">
+              <Form>
+                <FormField label="Movie Name" htmlFor="movieId">
+                  <TextInput
+                    id="movieId"
+                    value={form.movie_name}
+                    onChange={(e) => {
+                      setForm({ ...form, movie_name: e.target.value });
+                    }}
+                    placeholder="Please enter a movie name..."
+                  />
+                </FormField>
+                <FormField label="Suggestion By" htmlFor="suggestionById">
+                  <TextInput
+                    id="suggestionById"
+                    value={form.suggestion_by}
+                    onChange={(e) => {
+                      setForm({ ...form, suggestion_by: e.target.value });
+                    }}
+                    placeholder="Please enter suggester who suggested this..."
+                  />
+                </FormField>
+                <Box direction="row" gap="medium">
+                  <Button
+                    onClick={() => {
+                      submitForm();
+                    }}
+                    type="submit"
+                    label="Submit"
+                  />
+                </Box>
+              </Form>
+            </Tab>
+          </Tabs>
+        </>
+      )}
     </div>
   );
 }
