@@ -16,7 +16,7 @@ import Main from "./components/Main";
 const theme = {
   global: {
     font: {
-      family: "Roboto",
+      family: "Edu NSW ACT Foundation",
       size: "16px",
       height: "20px",
     },
