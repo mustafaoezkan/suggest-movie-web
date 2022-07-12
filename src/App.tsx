@@ -1,17 +1,8 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Grid,
-  Grommet,
-  Header,
-  Menu,
-} from "grommet";
+import { Grommet } from "grommet";
 import Main from "./components/Main";
+import Login from "./components/Login";
+import PrivateRoute from "./components/PrivateRoute";
 
 const theme = {
   global: {
@@ -26,7 +17,8 @@ const theme = {
 function App() {
   return (
     <Grommet theme={theme}>
-      <Main />
+      <Login />
+      <PrivateRoute path="/main" component={Main} />
     </Grommet>
   );
 }
