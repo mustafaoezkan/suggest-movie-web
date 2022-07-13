@@ -1,8 +1,11 @@
-import React from "react";
 import { Grommet } from "grommet";
 import Main from "./components/Main";
 import Login from "./components/Login";
-import PrivateRoute from "./components/PrivateRoute";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Missing from "./components/Missing";
+import RequireAuth from "./components/RequireAuth";
+import Register from "./components/Register";
 
 const theme = {
   global: {
@@ -17,8 +20,19 @@ const theme = {
 function App() {
   return (
     <Grommet theme={theme}>
-      <Login />
-      <PrivateRoute path="/main" component={Main} />
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          {/* Public Routes*/}
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+          {/* Private Routes*/}
+          <Route element={<RequireAuth />}>
+            <Route path="main" element={<Main />} />
+          </Route>
+          {/* Missing Routes*/}
+          <Route path="*" element={<Missing />} />
+        </Route>
+      </Routes>
     </Grommet>
   );
 }

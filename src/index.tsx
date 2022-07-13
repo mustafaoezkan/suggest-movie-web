@@ -3,9 +3,8 @@ import App from "./App";
 import { applyMiddleware, createStore } from "redux";
 import thunk from "redux-thunk";
 import { Provider } from "react-redux";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import rootReducer from "./store";
-import React from "react";
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
@@ -14,8 +13,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider store={store}>
-    <Router>
-      <App />
-    </Router>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/*" element={<App />} />
+      </Routes>
+    </BrowserRouter>
   </Provider>
 );
