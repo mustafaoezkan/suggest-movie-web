@@ -1,15 +1,35 @@
-import { Button } from "grommet";
+import { Button, Notification, Spinner } from "grommet";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppState } from "../store";
-import { deleteSuggestion } from "../store/actions/suggestionAction";
+import {
+  deleteSuggestion,
+  getSuggestion,
+} from "../store/actions/suggestionAction";
 
 export default function DeleteMovie() {
   const dispatch = useDispatch();
+  const [visible, setVisible] = useState("");
+
+  const deleteClick = (id) => {
+    try {
+      dispatch<any>(deleteSuggestion(id));
+      setVisible("success");
+    } catch (error) {
+      setVisible("error");
+    }
+  };
+
+  useEffect(() => {
+    dispatch<any>(getSuggestion());
+  }, [visible]);
 
   const { data, loading, error } = useSelector(
     (state: AppState) => state.suggestion
   );
-  return (
+  return loading ? (
+    <Spinner />
+  ) : (
     <>
       {data.map((item) => {
         return (
@@ -49,12 +69,31 @@ export default function DeleteMovie() {
                 textAlign: "center",
               }}
               onClick={() => {
-                dispatch<any>(deleteSuggestion(item.id));
+                deleteClick(item.id);
               }}
               primary
             >
               Sil
             </Button>
+            {visible === "success" ? (
+              <Notification
+                toast
+                status="info"
+                title="The movie was deleted from the database successfully"
+                onClose={() => {
+                  setVisible("");
+                }}
+              />
+            ) : visible === "error" ? (
+              <Notification
+                status="critical"
+                toast
+                title="Error while deleting the movie"
+                onClose={() => {
+                  setVisible("");
+                }}
+              />
+            ) : null}
           </div>
         );
       })}

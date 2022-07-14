@@ -1,11 +1,13 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { Button, TextInput } from "grommet";
+import { Button, Notification, TextInput } from "grommet";
 import { useState } from "react";
 import { auth } from "../firebase-config";
 
 export default function Register() {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
+  const [visible, setVisible] = useState("");
+  const [username, setUsername] = useState("");
 
   const register = async () => {
     try {
@@ -14,9 +16,12 @@ export default function Register() {
         registerEmail,
         registerPassword
       );
-      console.log(user);
+      setUsername(user.user.email as any);
+      setVisible("success");
+      setRegisterEmail("");
+      setRegisterPassword("");
     } catch (error) {
-      console.log(error);
+      setVisible("error");
     }
   };
   return (
@@ -24,12 +29,16 @@ export default function Register() {
       <h3>Register User</h3>
       <TextInput
         type="email"
+        defaultValue={registerEmail}
+        value={registerEmail}
         onChange={(e) => {
           setRegisterEmail(e.target.value);
         }}
       />
       <TextInput
         type="password"
+        defaultValue={registerPassword}
+        value={registerPassword}
         onChange={(e) => {
           setRegisterPassword(e.target.value);
         }}
@@ -42,6 +51,26 @@ export default function Register() {
       >
         Create User
       </Button>
+      {visible === "success" ? (
+        <Notification
+          toast
+          status="normal"
+          title="User Created"
+          message={`${username} has been created`}
+          onClose={() => {
+            setVisible("");
+          }}
+        />
+      ) : visible === "error" ? (
+        <Notification
+          status="critical"
+          toast
+          title="Error while creating the user"
+          onClose={() => {
+            setVisible("");
+          }}
+        />
+      ) : null}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import {
   AccordionPanel,
   Button,
   FormField,
+  Notification,
   TextInput,
 } from "grommet";
 import { useState } from "react";
@@ -19,12 +20,23 @@ const emptyForm: SuggestionForm = {
 };
 
 export default function UpdateMovie() {
+  const [form, setForm] = useState<SuggestionForm>(emptyForm);
+  const [visible, setVisible] = useState("");
   const dispatch = useDispatch();
 
   const { data, loading, error } = useSelector(
     (state: AppState) => state.suggestion
   );
-  const [form, setForm] = useState<SuggestionForm>(emptyForm);
+
+  const updateClick = (id) => {
+    try {
+      dispatch<any>(updateSuggestion(form, id));
+      setVisible("success");
+      setForm(emptyForm);
+    } catch (error) {
+      setVisible("error");
+    }
+  };
   return (
     <>
       {data.map((item) => {
@@ -39,7 +51,7 @@ export default function UpdateMovie() {
               >
                 <FormField label="Movie Name">
                   <TextInput
-                    value={form.movie_name}
+                    defaultValue={form.movie_name}
                     type="text"
                     onChange={(e) => {
                       setForm({ ...form, movie_name: e.target.value });
@@ -48,7 +60,7 @@ export default function UpdateMovie() {
                 </FormField>
                 <FormField label="Suggestion By">
                   <TextInput
-                    value={form.suggestion_by}
+                    defaultValue={form.suggestion_by}
                     type="text"
                     onChange={(e) => {
                       setForm({
@@ -60,7 +72,7 @@ export default function UpdateMovie() {
                 </FormField>
                 <FormField label="Like Count">
                   <TextInput
-                    value={form.like_count}
+                    defaultValue={form.like_count}
                     type="number"
                     onChange={(e) => {
                       setForm({
@@ -72,7 +84,7 @@ export default function UpdateMovie() {
                 </FormField>
                 <FormField label="Dislike Count">
                   <TextInput
-                    value={form.dislike_count}
+                    defaultValue={form.dislike_count}
                     type="number"
                     onChange={(e) => {
                       setForm({
@@ -94,12 +106,32 @@ export default function UpdateMovie() {
                     }}
                     primary
                     onClick={() => {
-                      dispatch<any>(updateSuggestion(form, item.id));
+                      updateClick(item.id);
                     }}
                   >
                     Save
                   </Button>
                 </FormField>
+                {visible === "success" ? (
+                  <Notification
+                    toast
+                    status="normal"
+                    title="Movie Updated"
+                    message="The movie was updated successfully"
+                    onClose={() => {
+                      setVisible("");
+                    }}
+                  />
+                ) : visible === "error" ? (
+                  <Notification
+                    status="critical"
+                    toast
+                    title="Error while updating the movie"
+                    onClose={() => {
+                      setVisible("");
+                    }}
+                  />
+                ) : null}
               </AccordionPanel>
             </Accordion>
           </>

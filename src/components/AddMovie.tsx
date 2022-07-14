@@ -1,4 +1,4 @@
-import { Box, Button, Form, FormField, TextInput } from "grommet";
+import { Box, Button, Form, FormField, Notification, TextInput } from "grommet";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addSuggestion } from "../store/actions/suggestionAction";
@@ -14,10 +14,17 @@ const emptyForm: SuggestionForm = {
 export default function AddMovie() {
   const dispatch = useDispatch();
   const [form, setForm] = useState<SuggestionForm>(emptyForm);
+  const [visible, setVisible] = useState("");
 
   const submitForm = () => {
-    setForm({ ...form, like_count: 5, dislike_count: 2 });
-    dispatch<any>(addSuggestion(form));
+    try {
+      setForm({ ...form, like_count: 5, dislike_count: 2 });
+      dispatch<any>(addSuggestion(form));
+      setVisible("success");
+      setForm(emptyForm);
+    } catch (error) {
+      setVisible("error");
+    }
   };
   return (
     <>
@@ -51,6 +58,24 @@ export default function AddMovie() {
             label="Submit"
           />
         </Box>
+        {visible === "success" ? (
+          <Notification
+            toast
+            status="normal"
+            title="The movie was added to the database successfully"
+            message="Thanks for your contribution, you can see your response on the show tab."
+            onClose={() => setVisible("")}
+          />
+        ) : visible === "error" ? (
+          <Notification
+            status="critical"
+            toast
+            title="Error while adding the movie"
+            onClose={() => {
+              setVisible("");
+            }}
+          />
+        ) : null}
       </Form>
     </>
   );
