@@ -1,0 +1,14 @@
+.send-button:active {
+    background-color: purple;
+    transform: translateY(4px);
+}
+
+.like-button:active {
+    background-color: green;
+    transform: translateY(4px);
+}
+
+.dislike-button:active {
+    background-color: red;
+    transform: translateY(4px);
+}

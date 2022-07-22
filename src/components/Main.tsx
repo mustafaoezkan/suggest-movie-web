@@ -1,5 +1,5 @@
 import { onAuthStateChanged } from "firebase/auth";
-import { Tab, Tabs } from "grommet";
+import { Box, Tab, Tabs } from "grommet";
 import { useState } from "react";
 import { useEffect } from "react";
 import { auth } from "../firebase-config";
@@ -7,6 +7,7 @@ import AddMovie from "./AddMovie";
 import DeleteMovie from "./DeleteMovie";
 import ShowMovie from "./ShowMovie";
 import UpdateMovie from "./UpdateMovie";
+import UserMain from "./UserMain";
 
 export default function Main() {
   const [user, setUser] = useState({}) as any;
@@ -18,13 +19,7 @@ export default function Main() {
   }, []);
 
   return (
-    <div
-      style={{
-        margin: "auto",
-        width: "50%",
-        padding: "5rem",
-      }}
-    >
+    <Box>
       <>
         {user.uid === "gcxv6eIO9ISOYPrVK7QWbm0hQgB3" ? (
           <Tabs>
@@ -42,16 +37,9 @@ export default function Main() {
             </Tab>
           </Tabs>
         ) : (
-          <Tabs>
-            <Tab title="Show">
-              <ShowMovie />
-            </Tab>
-            <Tab title="Add">
-              <AddMovie />
-            </Tab>
-          </Tabs>
+          <UserMain />
         )}
       </>
-    </div>
+    </Box>
   );
 }

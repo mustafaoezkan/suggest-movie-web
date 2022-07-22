@@ -5,8 +5,6 @@ import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Missing from "./components/Missing";
 import RequireAuth from "./components/RequireAuth";
-import Register from "./components/Register";
-
 const theme = {
   global: {
     font: {
@@ -24,7 +22,6 @@ function App() {
         <Route path="/" element={<Layout />}>
           {/* Public Routes*/}
           <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
           {/* Private Routes*/}
           <Route element={<RequireAuth />}>
             <Route path="main" element={<Main />} />

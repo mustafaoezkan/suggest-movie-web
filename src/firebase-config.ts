@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCh981GyW8OQ0X28MMkkMKkuB3NSsNfuOE",
-  authDomain: "suggest-movie-auth.firebaseapp.com",
-  projectId: "suggest-movie-auth",
-  storageBucket: "suggest-movie-auth.appspot.com",
-  messagingSenderId: "616150542460",
-  appId: "1:616150542460:web:ff14468c4a50e6af5581f9",
-  measurementId: "G-088KVLGP9X"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
