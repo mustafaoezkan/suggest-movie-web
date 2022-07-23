@@ -37,8 +37,13 @@ export default function UserMain() {
 
   const submitForm = () => {
     try {
-      setForm({ ...form });
-      dispatch<any>(addSuggestion(form));
+      const result = {
+        movie_name: form.movie_name,
+        dislike_count: form.dislike_count + 1,
+        like_count: form.like_count + 1,
+        suggestion_by: form.suggestion_by,
+      };
+      dispatch<any>(addSuggestion(result));
       setVisible("success");
       setForm(emptyForm);
     } catch {
@@ -141,7 +146,7 @@ export default function UserMain() {
                 className="like-button"
                 icon={<Like />}
                 primary
-                badge={item.like_count}
+                badge={item.like_count - 1}
                 onClick={() => {
                   const result = {
                     movie_name: item.movie_name,
@@ -157,7 +162,7 @@ export default function UserMain() {
                 className="dislike-button"
                 icon={<Dislike />}
                 primary
-                badge={item.dislike_count}
+                badge={item.dislike_count - 1}
                 onClick={() => {
                   const result = {
                     movie_name: item.movie_name,
