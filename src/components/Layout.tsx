@@ -3,7 +3,7 @@ import { Box, Button, CheckBox, Heading } from "grommet";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../firebase-config";
-import { Login, Logout } from "grommet-icons";
+import { Login, Logout, Home } from "grommet-icons";
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -63,12 +63,6 @@ export default function Layout() {
           basis="xsmall"
           fill="horizontal"
         >
-          <Button
-            label={user ? "Logout" : "Login"}
-            icon={user ? <Logout /> : <Login />}
-            reverse
-            onClick={user ? LogoutFunc : () => navigate("/login")}
-          />
           <CheckBox
             label={darkMode ? "Dark Mode" : "Light Mode"}
             toggle
@@ -76,6 +70,20 @@ export default function Layout() {
             onChange={(e) => {
               e.target.checked ? setDarkMode(true) : setDarkMode(false);
             }}
+          />
+          {user && (
+            <Button
+              label={"Main Page"}
+              icon={<Home />}
+              reverse
+              onClick={() => navigate("/main")}
+            />
+          )}
+          <Button
+            label={user ? "Logout" : "Login"}
+            icon={user ? <Logout /> : <Login />}
+            reverse
+            onClick={user ? LogoutFunc : () => navigate("/login")}
           />
         </Box>
       </Box>
